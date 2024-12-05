@@ -1,26 +1,37 @@
-﻿using Microsoft.Extensions.Logging;
-using Shared;
+﻿using Core;
+using Core.ExternalLibs;
+using Core.Interfaces;
+using Core.Interfaces.ExternalLibs;
+using Core.Interfaces.Monitors;
+using Core.Monitors;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-
-using var factory = LoggerFactory.Create(builder =>
+class Program
 {
-    builder
-        .SetMinimumLevel(LogLevel.Debug)
-        .AddConsole();
-});
+    static async Task Main(string[] args)
+    {
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+        var serviceProvider = serviceCollection.BuildServiceProvider();
 
-var logger = factory.CreateLogger<ProcessTracker>();
+        var application = serviceProvider.GetRequiredService<ITracker>();
+        await application.RunAsync(args);
+    }
 
-logger.LogDebug("Tracking processes...");
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        services.AddLogging(configure =>
+        {
+            configure
+                .SetMinimumLevel(LogLevel.Debug)
+                .AddConsole();
+        });
 
-CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-CancellationToken token = cancellationTokenSource.Token;
-
-using ProcessTracker processTracker = new(logger);
-
-processTracker.ProcessStarted += (sender, process) =>
-{
-    logger.LogDebug("Test");
-};
-
-await processTracker.StartAsync(token);
+        services.AddTransient<ITracker, Tracker>();
+        services.AddSingleton<IAppMonitor,AppMonitor>();
+        services.AddSingleton<INotepadMonitor, NotepadMonitor>();
+        services.AddSingleton<ITelegramMonitor, TelegramMonitor>();
+        services.AddSingleton<IWinUser32Api, WinUser32Api>();
+    }
+}

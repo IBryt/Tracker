@@ -1,22 +1,25 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Core.Interfaces;
+using Core.Utils;
+using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 
-namespace Shared;
+namespace Core;
 
 
-public class ProcessTracker : IDisposable
+public class AppMonitor : IAppMonitor, IDisposable
 {
     private readonly ConcurrentDictionary<int, Process> _existingProcesses = new();
-    private readonly List<string> _processNames = new() { "notepad", "Telegram" };
-    private readonly int _delay = 1000;
-    private bool _disposed = false;
     private readonly ILogger _logger;
+    private bool _disposed = false;
+
+    public event ProcessStartedEventHandler? ProcessStarted;
+    public event ProcessStopedEventHandler? ProcessStoped;
 
     public delegate void ProcessStartedEventHandler(object sender, Process process);
-    public event ProcessStartedEventHandler? ProcessStarted;
+    public delegate void ProcessStopedEventHandler(object sender, Process process);
 
-    public ProcessTracker(ILogger<ProcessTracker> logger)
+    public AppMonitor(ILogger<IAppMonitor> logger)
     {
         _logger = logger;
     }
@@ -31,7 +34,6 @@ public class ProcessTracker : IDisposable
 
                 foreach (var process in processes)
                 {
-                    _logger.LogDebug($"Process started: {process.ProcessName}, ID: {process.Id}");
                     try
                     {
                         if (_existingProcesses.TryAdd(process.Id, process))
@@ -55,12 +57,12 @@ public class ProcessTracker : IDisposable
                     }
                 }
 
-                await Task.Delay(_delay, cancellationToken);
+                await Task.Delay(Constants.ProcessCheckInterval, cancellationToken);
             }
         }
         catch (TaskCanceledException)
         {
-            _logger.LogInformation("Process tracking canceled.");
+            _logger.LogDebug("Process tracking canceled.");
         }
         catch (Exception ex)
         {
@@ -70,7 +72,12 @@ public class ProcessTracker : IDisposable
 
     protected virtual void OnProcessStarted(Process process)
     {
-        Task.Run(() => ProcessStarted?.Invoke(this, process));
+        ProcessStarted?.Invoke(this, process);
+    }
+
+    protected virtual void OnProcessStoped(Process process)
+    {
+        ProcessStoped?.Invoke(this, process);
     }
 
     public void Dispose()
@@ -90,7 +97,7 @@ public class ProcessTracker : IDisposable
     {
         List<Process> processes = new();
 
-        foreach (var processName in _processNames)
+        foreach (var processName in Constants.ProcessNames)
         {
             var processesByName = Process.GetProcessesByName(processName);
 
@@ -117,10 +124,10 @@ public class ProcessTracker : IDisposable
             return;
         }
 
-        _logger.LogDebug($"Process {process.ProcessName} with ID {process.Id} has exited.");
         if (_existingProcesses.TryRemove(process.Id, out _))
         {
             RemoveProcess(process);
+            OnProcessStoped(process);
         }
     }
 
