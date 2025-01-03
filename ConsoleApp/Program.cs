@@ -1,22 +1,21 @@
 ﻿using Core;
-using Core.ExternalLibs;
 using Core.Interfaces;
-using Core.Interfaces.ExternalLibs;
-using Core.Interfaces.Monitors;
-using Core.Monitors;
+using Core.Interfaces.Native;
+using Core.Native;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 class Program
 {
-    static async Task Main(string[] args)
+    static void Main(string[] args)
     {
         var serviceCollection = new ServiceCollection();
         ConfigureServices(serviceCollection);
         var serviceProvider = serviceCollection.BuildServiceProvider();
 
         var application = serviceProvider.GetRequiredService<ITracker>();
-        await application.RunAsync(args);
+        application.Run(args);
+        Console.ReadKey();
     }
 
     private static void ConfigureServices(IServiceCollection services)
@@ -29,9 +28,10 @@ class Program
         });
 
         services.AddTransient<ITracker, Tracker>();
-        services.AddSingleton<IAppMonitor,AppMonitor>();
-        services.AddSingleton<INotepadMonitor, NotepadMonitor>();
-        services.AddSingleton<ITelegramMonitor, TelegramMonitor>();
-        services.AddSingleton<IWinUser32Api, WinUser32Api>();
+        services.AddSingleton<IEventProcessor, EventProcessor>();
+        services.AddSingleton<IMessageLoop, MessageLoop>();
+        services.AddSingleton<IWindowActionQueue, WindowActionQueue>();
+        services.AddSingleton<IWindowHandler, WindowHandler>();
+        services.AddSingleton<IWindowManager, WindowManager>();
     }
 }

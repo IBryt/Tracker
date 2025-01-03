@@ -2,5 +2,5 @@
 
 public interface ITracker
 {
-    public Task RunAsync(string[] args);
+    public void Run(string[] args);
 }
