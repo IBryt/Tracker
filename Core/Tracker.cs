@@ -8,7 +8,9 @@ public class Tracker : ITracker
     private readonly ILogger<Tracker> _logger;
     private readonly IWindowMessageProcessor _windowMessageProcessor;
     
-    public Tracker(ILogger<Tracker> logger, IWindowMessageProcessor windowMessageProcessor)
+    public Tracker(
+        ILogger<Tracker> logger,
+        IWindowMessageProcessor windowMessageProcessor)
     {
         _logger = logger;
         _windowMessageProcessor = windowMessageProcessor;
