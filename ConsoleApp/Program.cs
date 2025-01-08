@@ -19,7 +19,13 @@ class Program
 
         var application = serviceProvider.GetRequiredService<ITracker>();
         application.Run(args);
-        Console.ReadKey();
+
+        Console.WriteLine("Press any key to exit the program...");
+        Console.ReadKey(intercept: true);
+        
+        serviceProvider.Dispose();
+
+        Environment.Exit(0);
     }
 
     private static void ConfigureServices(IServiceCollection services)

@@ -5,6 +5,8 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<PlatformTarget>x64</PlatformTarget>
+	<SupportedOSPlatform>Windows</SupportedOSPlatform>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,4 +15,8 @@
 	<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.0" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <NoWarn>CA1416</NoWarn>
+  </PropertyGroup>
+	
 </Project>
