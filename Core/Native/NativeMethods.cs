@@ -1,7 +1,7 @@
 ﻿using Core.Monitor;
 using Core.Native.Enums;
+using Core.Observer;
 using System.Runtime.InteropServices;
-using static Core.Native.EventProcessor;
 
 namespace Core.Native;
 
@@ -21,8 +21,8 @@ public static class NativeMethods
     public static extern uint GetWindowThreadProcessId(nint hWnd, out uint lpdwProcessId);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-    public static extern nint SetWinEventHook(WindowEvent eventMin, WindowEvent eventMax, nint hmodWinEventProc, 
-        WindowEventProcDelegate lpfnWinEventProc, uint idProcess, uint idThread, WinEventHookFlags dwFlags);
+    public static extern nint SetWinEventHook(WindowEvent eventMin, WindowEvent eventMax, nint hmodWinEventProc,
+        WindowObserverMessageHandlerDelegate lpfnWinEventProc, uint idProcess, uint idThread, WinEventHookFlags dwFlags);
 
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool UnhookWinEvent(nint hWinEventHook);
@@ -85,13 +85,18 @@ public static class NativeMethods
     [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
     public static extern bool PeekMessage(out MSG lpMsg, nint hWnd, uint wMsgFilterMin, uint wMsgFilterMax, uint wRemoveMsg);
 
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern nint GetAncestor(nint hwnd, uint flags);
+
+    [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+    public static extern nint GetWindow(nint hwnd, uint uCmd);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
     public struct WNDCLASSEX
     {
         public uint cbSize;
         public WindowClassStyles style;
-        public WindowMessageHandlerDelegate lpfnWndProc;
+        public WindowMonitorMessageHandlerDelegate lpfnWndProc;
         public int cbClsExtra;
         public int cbWndExtra;
         public nint hInstance;

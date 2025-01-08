@@ -1,6 +1,7 @@
 ﻿using Core.Interfaces;
 using Core.Interfaces.Infrastructure;
 using Core.Interfaces.Monitor;
+using Core.Interfaces.Observer;
 using Microsoft.Extensions.Logging;
 using static Core.Native.NativeMethods;
 
@@ -11,17 +12,20 @@ public class WindowMessageProcessor : IWindowMessageProcessor
     private readonly ILogger<WindowMessageProcessor> _logger;
     private readonly IThreadSyncEvent _threadSyncEvent;
     private readonly IWindowMonitor _windowMonitor;
+    private readonly IWindowObserver _windowObserver;
     private readonly CancellationTokenSource _cancellationTokenSource;
     private Thread? _messageLoopThread;
 
     public WindowMessageProcessor(
         ILogger<WindowMessageProcessor> logger,
         IThreadSyncEvent threadSyncEvent,
-        IWindowMonitor windowMonitor)
+        IWindowMonitor windowMonitor,
+        IWindowObserver windowObserver)
     {
         _logger = logger;
         _threadSyncEvent = threadSyncEvent;
         _windowMonitor = windowMonitor;
+        _windowObserver = windowObserver;
         _cancellationTokenSource = new CancellationTokenSource();
     }
 
@@ -62,6 +66,13 @@ public class WindowMessageProcessor : IWindowMessageProcessor
     private void InitializeComponents()
     {
         _threadSyncEvent.Initialization();
+
+        if (!_windowObserver.Initialize())
+        {
+            _logger.LogError("Failed to initialize window observer");
+            _cancellationTokenSource.Cancel();
+            return;
+        }
 
         if (!_windowMonitor.Initialize())
         {

@@ -3,4 +3,5 @@
 public enum SystemProcesses
 {
     Notepad,
+    Chrome,
 }

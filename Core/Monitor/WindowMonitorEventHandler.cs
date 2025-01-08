@@ -40,7 +40,7 @@ public class WindowMonitorEventHandler : IWindowMonitorEventHandler
 
         try
         {
-            ProcesswindowInfo(windowInfo);
+            ProcessWindowInfo(windowInfo);
         }
         catch (Exception ex)
         {
@@ -49,7 +49,7 @@ public class WindowMonitorEventHandler : IWindowMonitorEventHandler
         }
     }
 
-    private void ProcesswindowInfo(WindowInfo windowInfo)
+    private void ProcessWindowInfo(WindowInfo windowInfo)
     {
         switch (windowInfo.WindowEvent)
         {

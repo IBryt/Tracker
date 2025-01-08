@@ -11,7 +11,7 @@ namespace Core.Monitor;
 public class WindowMonitor : IWindowMonitor
 {
     private const uint COLOR_WINDOW = 5;
-    private WindowMessageHandlerDelegate? _wndProcDelegate;
+    private WindowMonitorMessageHandlerDelegate? _proc;
 
     private readonly ILogger<WindowMonitor> _logger;
     private readonly IWindowMonitorCallback _windowMonitorCallback;
@@ -50,13 +50,13 @@ public class WindowMonitor : IWindowMonitor
 
     private bool RegisterWindowClass()
     {
-        _wndProcDelegate = _windowMonitorCallback.OnWindowMessage;
+        _proc = _windowMonitorCallback.OnWindowMessage;
 
         var wndClass = new WNDCLASSEX
         {
             cbSize = (uint)Marshal.SizeOf(typeof(WNDCLASSEX)),
             style = WindowClassStyles.CS_HREDRAW | WindowClassStyles.CS_VREDRAW,
-            lpfnWndProc = _wndProcDelegate,
+            lpfnWndProc = _proc,
             cbClsExtra = 0,
             cbWndExtra = 0,
             hInstance = GetModuleHandle(null),

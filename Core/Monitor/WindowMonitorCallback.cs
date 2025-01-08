@@ -8,7 +8,7 @@ using static Core.Native.NativeMethods;
 
 namespace Core.Monitor;
 
-public delegate nint WindowMessageHandlerDelegate(nint windowHandle, WindowMessages message, nint wParam, nint lParam);
+public delegate nint WindowMonitorMessageHandlerDelegate(nint windowHandle, WindowMessages message, nint wParam, nint lParam);
 
 public class WindowMonitorCallback : IWindowMonitorCallback
 {

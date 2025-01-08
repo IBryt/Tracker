@@ -3,9 +3,9 @@ using Core.Infrastructure;
 using Core.Interfaces;
 using Core.Interfaces.Infrastructure;
 using Core.Interfaces.Monitor;
-using Core.Interfaces.Native;
+using Core.Interfaces.Observer;
 using Core.Monitor;
-using Core.Native;
+using Core.Observer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -32,13 +32,15 @@ class Program
         });
 
         services.AddTransient<ITracker, Tracker>();
-        services.AddSingleton<IEventProcessor, EventProcessor>();
-        services.AddSingleton<IMessageLoop, MessageLoop>();
-        services.AddSingleton<IWindowInfoQueue, WindowInfoQueue>();
-        services.AddSingleton<IWindowManager, WindowManager>();
         services.AddSingleton<IWindowMessageProcessor, WindowMessageProcessor>();
         services.AddSingleton<IThreadSyncEvent, ThreadSyncEvent>();
+        
+        services.AddSingleton<IWindowInfoQueue, WindowInfoQueue>();
         services.AddSingleton<IWindowInfoManager, WindowInfoManager>();
+
+        services.AddSingleton<IWindowObserver, WindowObserver>();
+        services.AddSingleton<IWindowObserverCallback, WindowObserverCallback>();
+
         services.AddSingleton<IWindowMonitorCallback, WindowMonitorCallback>();
         services.AddSingleton<IWindowMonitorEventHandler, WindowMonitorEventHandler>();
         services.AddSingleton<IWindowMonitor, WindowMonitor>();

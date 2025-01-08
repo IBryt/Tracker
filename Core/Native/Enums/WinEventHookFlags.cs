@@ -1,4 +1,4 @@
-﻿namespace Core.Native;
+﻿namespace Core.Native.Enums;
 
 [Flags]
 public enum WinEventHookFlags : uint
