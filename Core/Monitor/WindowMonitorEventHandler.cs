@@ -110,6 +110,7 @@ public class WindowMonitorEventHandler : IWindowMonitorEventHandler
         {
             throw new InvalidOperationException("Failed to get parent window rectangle");
         }
+
         var windowPosition = CalculateWindowPosition(parentRect, windowInfo);
 
         var childHwnd = CreateWindowEx(
@@ -133,7 +134,10 @@ public class WindowMonitorEventHandler : IWindowMonitorEventHandler
             throw new InvalidOperationException($"Failed to create window: {error}");
         }
 
-        SetLayeredWindowAttributes(childHwnd, 0x000000, WINDOW_OPACITY, LWA_ALPHA);
+        SetLayeredWindowAttributes(childHwnd, Color.Black, WINDOW_OPACITY, LWA_ALPHA);
+
+        SetFocus(windowInfo.ParentHwnd);
+
         AddOrUpdateWindowInfo(childHwnd, windowInfo);
         _windows.TryAdd(windowInfo.ParentHwnd, childHwnd);
 
