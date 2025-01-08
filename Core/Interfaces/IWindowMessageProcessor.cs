@@ -1,6 +1,6 @@
 ﻿namespace Core.Interfaces;
 
-public interface IWindowHandler : IDisposable
+public interface IWindowMessageProcessor
 {
     public void Start();
 }

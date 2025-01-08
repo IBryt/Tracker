@@ -3,6 +3,4 @@
 public enum SystemProcesses
 {
     Notepad,
-    Telegram,
-    Discord,
 }

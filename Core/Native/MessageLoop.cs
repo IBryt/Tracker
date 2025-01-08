@@ -1,7 +1,7 @@
 ﻿using Core.Interfaces.Native;
+using Core.Native.Enums;
 using static Core.Native.EventProcessor;
 using static Core.Native.NativeMethods;
-
 
 namespace Core.Native;
 
@@ -83,9 +83,9 @@ public class MessageLoop : IMessageLoop
     {
         _proc = _eventProcessor.EventProcessorCallback;
         return SetWinEventHook(
-            WinEvent.EVENT_SYSTEM_FOREGROUND,
-            WinEvent.EVENT_OBJECT_LOCATIONCHANGE,
-            IntPtr.Zero,
+            WindowEvent.EVENT_SYSTEM_FOREGROUND,
+            WindowEvent.EVENT_OBJECT_LOCATIONCHANGE,
+            nint.Zero,
             _proc,
             0,
             0,

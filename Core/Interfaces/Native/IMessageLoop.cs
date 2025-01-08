@@ -1,6 +1,4 @@
-﻿using static Core.Native.EventProcessor;
-
-namespace Core.Interfaces.Native;
+﻿namespace Core.Interfaces.Native;
 
 public interface IMessageLoop : IDisposable
 {
