@@ -38,18 +38,18 @@ class Program
         });
 
         services.AddTransient<ITracker, Tracker>();
-        services.AddSingleton<IWindowMessageProcessor, WindowMessageProcessor>();
+        services.AddSingleton<IWindowMonitorThread, WindowMonitorThread>();
         services.AddSingleton<IThreadSyncEvent, ThreadSyncEvent>();
         
         services.AddSingleton<IWindowInfoQueue, WindowInfoQueue>();
         services.AddSingleton<IWindowInfoManager, WindowInfoManager>();
 
+        services.AddSingleton<IWindowObserverThread, WindowObserverThread>();
         services.AddSingleton<IWindowObserver, WindowObserver>();
         services.AddSingleton<IWindowObserverCallback, WindowObserverCallback>();
 
         services.AddSingleton<IWindowMonitorCallback, WindowMonitorCallback>();
         services.AddSingleton<IWindowMonitorEventHandler, WindowMonitorEventHandler>();
         services.AddSingleton<IWindowMonitor, WindowMonitor>();
-        
     }
 }

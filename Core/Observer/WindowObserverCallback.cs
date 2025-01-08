@@ -44,15 +44,15 @@ public class WindowObserverCallback : IWindowObserverCallback
             switch (eventType)
             {
                 case WindowEvent.EVENT_SYSTEM_FOREGROUND:
-                    HandleForegroundEvent(parentHwnd);
+                    HandleForegroundEvent(hwnd);
                     break;
 
                 case WindowEvent.EVENT_OBJECT_DESTROY:
-                    HandleDestroyEvent(parentHwnd);
+                    HandleDestroyEvent(hwnd);
                     break;
 
                 case WindowEvent.EVENT_OBJECT_LOCATIONCHANGE:
-                    HandleLocationChangeEvent(parentHwnd);
+                    HandleLocationChangeEvent(hwnd);
                     break;
             }
 
