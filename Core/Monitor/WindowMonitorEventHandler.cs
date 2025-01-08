@@ -11,6 +11,7 @@ namespace Core.Monitor;
 
 public class WindowMonitorEventHandler : IWindowMonitorEventHandler
 {
+    private const uint SWP_NOACTIVATE = 0x0010;
     private const uint SWP_SHOWWINDOW = 0x0040;
     private const int LWA_ALPHA = 0x00000002;
     private const int DEFAULT_WINDOW_WIDTH = 200;
@@ -153,7 +154,7 @@ public class WindowMonitorEventHandler : IWindowMonitorEventHandler
             windowPosition.Y,
             windowPosition.Width,
             windowPosition.Height,
-            SWP_SHOWWINDOW);
+            SWP_SHOWWINDOW | SWP_NOACTIVATE);
 
         InvalidateRect(childHwnd, nint.Zero, true);
         AddOrUpdateWindowInfo(childHwnd, windowInfo);
